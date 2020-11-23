@@ -5,14 +5,35 @@
 	<link rel="stylesheet" type="text/css" href="/static/main.css">
 </head>
 <body>
-
-<h1>Prediction using linear regression</h1>
-<form method="POST" action="/predict" enctype="multipart/form-data">
-	<label>Enter the csv file </label>
-	<input type="file" name="attachment">
-	<input type="submit">
-</form>
-	{%if(members)%}
+<h2 style="text-align:center">Prediction using linear regression</h2>
+   
+  <div class="column left">
+  	<h3> Enter the data </h3>
+    <form method="POST" action="/predictjson" nctype="multipart/form-data" >
+    <label>Enter the number of SuccessfulDribbling  </label><br>
+	<input type="number" name="dribbling" required><br>
+	<label>Enter the number of SuccessfulPass  </label><br>
+	<input type="number" name="pass" required><br>
+	<label>Enter the PlayerAttackingScore  </label><br>
+	<input type="number" name="attacking" required><br>
+	<label>Enter the PlayerDefendingScore  </label><br>
+	<input type="number" name="defending" required><br>
+	<label>Enter the PlayerTeamPlayScore  </label><br>
+	<input type="number" name="teamplay" required><br>
+	<input type="submit" value="predict">
+	</form>
+  </div>
+  <div class="column middle" >
+    <form method="POST" action="/predict" enctype="multipart/form-data">
+    <h3> Select csv file only </h3>
+	<input type="file" name="attachment"><br>
+	<input type="submit" value="submit file"><br>
+	</form>
+	
+  </div>
+  <div class="column right" >
+  	<h3> Results</h3>
+     {%if(members)%}
 	Top 5 players of next season are
 	<ol>
         {% for member in members: %}
@@ -21,53 +42,10 @@
 	</ol>
 	{%endif%}
 
-	<p>OR</p>
-	<p>Calculate the player score based on data given</p>
-<form method="POST" action="/predictjson" nctype="multipart/form-data" >
-	<label>Enter the number of BackPostPass  </label>
-	<input type="text" name="">
-	<label>Enter the number of BlockedShot  </label>
-	<input type="text" name="">
-	<label>Enter the number of Goal  </label>
-	<input type="text" name="">
-	<label>Enter the number of GoalAssist  </label>
-	<input type="text" name="">
-	<label>Enter the number of OffTargetShot  </label>
-	<input type="text" name="">
-	<label>Enter the number of OnTargetShot  </label>
-	<input type="text" name="">
-	<label>Enter the number of SavedShot  </label>
-	<input type="text" name="">
-	
-	 <label>Enter the number of SuccessfulDribbling  </label>
-	<input type="text" name="dribbling">
-	<label>Enter the number of SuccessfulInterception  </label>
-	<input type="text" name="">
-	
-	 <label>Enter the number of SuccessfulPass  </label>
-	<input type="text" name="pass">
-	<label>Enter the number of SuccessfulTackle  </label>
-	<input type="text" name="">
-	<label>Enter the number of UnsuccessfulDribbling  </label>
-	<input type="text" name="">
-	<label>Enter the number of UnsuccessfulInterception  </label>
-	<input type="text" name="">
-	<label>Enter the number of UnsuccessfulPass  </label>
-	<input type="text" name="">
-	<label>Enter the number of UnsuccessfulTackle  </label>
-	<input type="text" name="">
-	 <label>Enter the number of PlayerAttackingScore  </label>
-	<input type="text" name="attacking">
-	<label>Enter the number of PlayerDefendingScore  </label>
-	<input type="text" name="defending">
-	<label>Enter the number of PlayerTeamPlayScore  </label>
-	<input type="text" name="teamplay">
-	
-	<input type="submit">
-</form>
-
-{%if(prediction)%}
-	Total player score of the player is {{prediction}}
+	{%if(prediction)%}
+	predicted player score is {{prediction}}
 {%endif%}
+  </div>
+</div>
 </body>
 </html>
