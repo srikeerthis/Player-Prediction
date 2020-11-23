@@ -44,6 +44,7 @@ def predict():
     else:
         print ('Train the model first')
         return ('No model here to use')
+
 # Applying average method
 @app.route('/predict1', methods=['POST'])
 def predictavg():
@@ -101,6 +102,21 @@ def predictavg():
 def predictjson():
     if lr:
         try:
+            # Other Attributes of dataset
+
+            # backPostPass = request.form.get('backpass')
+            # blockedShot = request.form.get('blocked')
+            # goal = request.form.get('goal')
+            # goalAssist = request.form.get('goalassist')
+            # offTargetShot = request.form.get('offtarget')
+            # onTargetShot = request.form.get('ontarget')
+            # SavedShot = request.form.get('saved')
+            # SuccessfulInterception = request.form.get('interception')
+            # SuccessfulTackle = request.form.get('tackle')
+            # UnsuccessfulDribbling = request.form.get('udribbling')
+            # UnsuccessfulInterception = request.form.get('uinterception')
+            # UnsuccessfulPass = request.form.get('upass')
+            # UnsuccessfulTackle = request.form.get('utackle')
             successfulDribbling = request.form.get('dribbling')
             successfulPass = request.form.get('pass')
             playerAttackingScore = request.form.get('attacking')
