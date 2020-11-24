@@ -98,6 +98,51 @@ def predictavg():
         print ('Train the model first')
         return ('No model here to use')
 
+@app.route('/predict1json', methods=['POST'])
+def predict1json():
+    lr = joblib.load("model1.pkl") # Load "model.pkl"
+    print ('Model1 loaded')
+    model_columns = joblib.load("model_columns1.pkl") # Load "model_columns.pkl"
+    print ('Model columns 1 loaded')
+    if lr:
+        try:
+            # Other Attributes of dataset
+
+            # backPostPass = request.form.get('backpass')
+            # blockedShot = request.form.get('blocked')
+            # goal = request.form.get('goal')
+            # goalAssist = request.form.get('goalassist')
+            # offTargetShot = request.form.get('offtarget')
+            onTargetShot = request.form.get('ontarget')
+            # SavedShot = request.form.get('saved')
+            # SuccessfulInterception = request.form.get('interception')
+            # SuccessfulTackle = request.form.get('tackle')
+            # UnsuccessfulDribbling = request.form.get('udribbling')
+            # UnsuccessfulInterception = request.form.get('uinterception')
+            # UnsuccessfulPass = request.form.get('upass')
+            # UnsuccessfulTackle = request.form.get('utackle')
+            
+            successfulDribbling = request.form.get('dribbling')
+            successfulPass = request.form.get('pass')
+            playerAttackingScore = request.form.get('attacking')
+            playerDefendingScore = request.form.get('defending')
+            playerTeamPlayScore = request.form.get('teamplay')
+
+            x = [[onTargetShot,successfulDribbling,successfulPass,playerAttackingScore,playerDefendingScore,playerTeamPlayScore]]
+            query = pd.DataFrame(data=x,columns=model_columns)
+            query = query.reindex(columns=model_columns, fill_value=0)
+
+            prediction = lr.predict(query)
+            print(type(prediction))
+            return render_template('index.html',avgprediction=str(prediction[0]))
+
+        except:
+
+            return jsonify({'trace': traceback.format_exc()})
+    else:
+        print ('Train the model first')
+        return ('No model here to use')
+
 @app.route('/predictjson', methods=['POST'])
 def predictjson():
     if lr:
@@ -117,6 +162,7 @@ def predictjson():
             # UnsuccessfulInterception = request.form.get('uinterception')
             # UnsuccessfulPass = request.form.get('upass')
             # UnsuccessfulTackle = request.form.get('utackle')
+            
             successfulDribbling = request.form.get('dribbling')
             successfulPass = request.form.get('pass')
             playerAttackingScore = request.form.get('attacking')

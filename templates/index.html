@@ -32,7 +32,38 @@
 	
   </div>
   <div class="column right" >
+    <form method="POST" action="/predict1" enctype="multipart/form-data">
+    <h3> Select csv file only </h3>
+	<input type="file" name="attachment"><br>
+	<input type="submit" value="submit file"><br>
+	</form>
+  </div>
+  <div class="column left">
+  	<h3> Enter the data </h3>
+    <form method="POST" action="/predict1json" nctype="multipart/form-data" >
+    <label>Enter the number of OnTargetShot  </label><br>
+	<input type="number" name="ontarget" required><br>
+    <label>Enter the number of SuccessfulDribbling  </label><br>
+	<input type="number" name="dribbling" required><br>
+	<label>Enter the number of SuccessfulPass  </label><br>
+	<input type="number" name="pass" required><br>
+	<label>Enter the PlayerAttackingScore  </label><br>
+	<input type="number" name="attacking" required><br>
+	<label>Enter the PlayerDefendingScore  </label><br>
+	<input type="number" name="defending" required><br>
+	<label>Enter the PlayerTeamPlayScore  </label><br>
+	<input type="number" name="teamplay" required><br>
+	<input type="submit" value="predict">
+	</form>
+  </div>
+  	<div class="column left" >
   	<h3> Results</h3>
+  		{%if(prediction)%}
+			predicted player score is {{prediction}}
+		{%endif%}
+	</div>
+	<div class="column middle" >
+  	<h3> Results with approach 1 </h3>
      {%if(members)%}
 	Top 5 players of next season are
 	<ol>
@@ -41,10 +72,24 @@
 		{% endfor %}
 	</ol>
 	{%endif%}
-
-	{%if(prediction)%}
-	predicted player score is {{prediction}}
-{%endif%}
+	</div>
+	<div class="column right" >
+  	<h3> Results with approach 2 </h3>
+	{%if(avgmembers)%}
+	Top 5 players of next season are
+	<ol>
+        {% for member in avgmembers: %}
+        <li>{{ member }}</li>
+		{% endfor %}
+	</ol>
+	{%endif%}
+	</div>
+	<div class="column rightmost" >
+  	<h3> Results with approach 2 </h3>
+	{%if(avgprediction)%}
+			predicted player score is {{avgprediction}}
+		{%endif%}
+	</div>
   </div>
 </div>
 </body>

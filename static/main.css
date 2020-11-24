@@ -20,15 +20,11 @@ h1 {
 .column {
   float: left;
   padding: 10px;
-  height: 300px; /* Should be removed. Only for demonstration */
+  height: 400px; /* Should be removed. Only for demonstration */
 }
 
-.left, .right {
-  width: 25%;
-}
-
-.middle {
-  width: 40%;
+.left, .right, .middle, .rightmost {
+  width: 20%;
 }
 
 /* Clear floats after the columns */
