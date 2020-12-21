@@ -26,7 +26,7 @@ def predict():
             # read the file
             df=pd.read_csv('%s'%f.filename)
             df.drop(['GameId'], axis = 1, inplace = True)
-            
+            #load the trained columns
             query = df.reindex(columns=model_columns, fill_value=0)
             prediction = list(lr.predict(query))
             
@@ -90,7 +90,7 @@ def predictavg():
             top_players.to_csv("avgpred.csv",index=False)
             playerId = list(top_players['PlayerId'].head())
             
-            return render_template('index.html',avgmembers=playerId)
+            return render_template('index.html',avgmembers=playerId, open= True)
         
         except:
             return jsonify({'trace': traceback.format_exc()})
@@ -129,12 +129,13 @@ def predict1json():
             playerTeamPlayScore = request.form.get('teamplay')
 
             x = [[onTargetShot,successfulDribbling,successfulPass,playerAttackingScore,playerDefendingScore,playerTeamPlayScore]]
+            y1 = [onTargetShot,successfulDribbling,successfulPass,playerAttackingScore,playerDefendingScore,playerTeamPlayScore]
             query = pd.DataFrame(data=x,columns=model_columns)
             query = query.reindex(columns=model_columns, fill_value=0)
 
             prediction = lr.predict(query)
             print(type(prediction))
-            return render_template('index.html',avgprediction=str(prediction[0]))
+            return render_template('index.html',avgprediction=str(prediction[0]), value1=y1, open= True)
 
         except:
 
@@ -170,12 +171,13 @@ def predictjson():
             playerTeamPlayScore = request.form.get('teamplay')
 
             x = [[successfulDribbling,successfulPass,playerAttackingScore,playerDefendingScore,playerTeamPlayScore]]
+            y = [successfulDribbling,successfulPass,playerAttackingScore,playerDefendingScore,playerTeamPlayScore]
+            
             query = pd.DataFrame(data=x,columns=model_columns)
             query = query.reindex(columns=model_columns, fill_value=0)
-
             prediction = lr.predict(query)
             print(type(prediction))
-            return render_template('index.html',prediction=str(prediction[0]))
+            return render_template('index.html',prediction=str(prediction[0]),value=y)
 
         except:
 

@@ -1,8 +1,11 @@
 body {
-  background: Linen;
-  margin-top: 50px;
-  margin-left: 50px;
-  }
+  background:#59ABE3;
+  margin:0
+}
+
+* {
+  box-sizing: border-box;
+}
 
 p {
   font-family: Georgia, serif;
@@ -16,21 +19,89 @@ h1 {
   color: FireBrick;
   }
 
-/* Create three unequal columns that floats next to each other */
-.column {
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto 450px;
+  background-color: #2196F3;
+}
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  font-size: 15px;
+}
+
+/* hide some text on medium and large screens */
+.hide-md-lg {
+  display: none;
+}
+
+.tab {
+  margin: 0 auto;
+  overflow: hidden;
+  border: 5px solid #2196F3;
+  border-bottom: none;
+  background-color: #d3eafc;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
   float: left;
-  padding: 10px;
-  height: 400px; /* Should be removed. Only for demonstration */
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
 }
 
-.left, .right, .middle, .rightmost {
-  width: 20%;
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
 }
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
 }
 
+/* Style the tab content */
+.tabcontent {
+  margin: 0 auto;
+  display: none;
+  padding: 6px 12px;
+  border: 5px solid #2196F3;
+  border-top: none;
+  padding: 5px;
+  text-align: center;
+  background-color: #d3eafc;
+}
+
+/* style the submit button */
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+input,
+.btn {
+  width: 60%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  margin: 5px 0;
+  opacity: 0.85;
+  display: inline-block;
+  font-size: 17px;
+  line-height: 20px;
+  text-decoration: none; /* remove underline from anchors */
+}
+
+input:hover,
+.btn:hover {
+  opacity: 1;
+}

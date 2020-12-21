@@ -28,9 +28,9 @@ for col in numeric_cols:
 
 # drop duplicates
 dataset = dataset.drop_duplicates(subset=dataset.columns)
-# there were duplicate rows
-print(dataset.shape)
+# modify the existing dataset after cleansing
 dataset.to_csv("football dataset.csv",index=False)
+
 dataset.drop(['GameId'], axis = 1, inplace = True)
 
 X1_var = dataset[['SuccessfulDribbling','SuccessfulPass','PlayerAttackingScore','PlayerDefendingScore','PlayerTeamPlayScore']]
@@ -52,6 +52,7 @@ lr = joblib.load('model.pkl')
 # Saving the data columns from training
 model_columns = list(X1_var.columns)
 joblib.dump(model_columns, 'model_columns.pkl')
+# removing unused columns of modified dataset 
 dataset.drop(['PlayerId'], axis = 1, inplace = True)
 dataset.drop(['PlayerOff'], axis = 1, inplace = True)
 dataset.drop(['playerOn'], axis = 1, inplace = True)

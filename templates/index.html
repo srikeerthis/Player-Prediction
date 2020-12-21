@@ -1,96 +1,165 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>prediction</title>
+	<title>Player Prediction</title>
 	<link rel="stylesheet" type="text/css" href="/static/main.css">
 </head>
 <body>
 <h2 style="text-align:center">Prediction using linear regression</h2>
-   
-  <div class="column left">
-  	<h3> Enter the data </h3>
-    <form method="POST" action="/predictjson" nctype="multipart/form-data" >
-    <label>Enter the number of SuccessfulDribbling  </label><br>
-	<input type="number" name="dribbling" required><br>
-	<label>Enter the number of SuccessfulPass  </label><br>
-	<input type="number" name="pass" required><br>
-	<label>Enter the PlayerAttackingScore  </label><br>
-	<input type="number" name="attacking" required><br>
-	<label>Enter the PlayerDefendingScore  </label><br>
-	<input type="number" name="defending" required><br>
-	<label>Enter the PlayerTeamPlayScore  </label><br>
-	<input type="number" name="teamplay" required><br>
-	<input type="submit" value="predict">
-	</form>
-  </div>
-  <div class="column middle" >
-    <form method="POST" action="/predict" enctype="multipart/form-data">
-    <h3> Select csv file only </h3>
-	<input type="file" name="attachment"><br>
-	<input type="submit" value="submit file"><br>
-	</form>
-	
-  </div>
-  <div class="column right" >
-    <form method="POST" action="/predict1" enctype="multipart/form-data">
-    <h3> Select csv file only </h3>
-	<input type="file" name="attachment"><br>
-	<input type="submit" value="submit file"><br>
-	</form>
-  </div>
-  <div class="column left">
-  	<h3> Enter the data </h3>
-    <form method="POST" action="/predict1json" nctype="multipart/form-data" >
-    <label>Enter the number of OnTargetShot  </label><br>
-	<input type="number" name="ontarget" required><br>
-    <label>Enter the number of SuccessfulDribbling  </label><br>
-	<input type="number" name="dribbling" required><br>
-	<label>Enter the number of SuccessfulPass  </label><br>
-	<input type="number" name="pass" required><br>
-	<label>Enter the PlayerAttackingScore  </label><br>
-	<input type="number" name="attacking" required><br>
-	<label>Enter the PlayerDefendingScore  </label><br>
-	<input type="number" name="defending" required><br>
-	<label>Enter the PlayerTeamPlayScore  </label><br>
-	<input type="number" name="teamplay" required><br>
-	<input type="submit" value="predict">
-	</form>
-  </div>
-  	<div class="column left" >
-  	<h3> Results</h3>
-  		{%if(prediction)%}
-			predicted player score is {{prediction}}
-		{%endif%}
-	</div>
-	<div class="column middle" >
-  	<h3> Results with approach 1 </h3>
-     {%if(members)%}
-	Top 5 players of next season are
-	<ol>
-        {% for member in members: %}
-        <li>{{ member }}</li>
-		{% endfor %}
-	</ol>
-	{%endif%}
-	</div>
-	<div class="column right" >
-  	<h3> Results with approach 2 </h3>
-	{%if(avgmembers)%}
-	Top 5 players of next season are
-	<ol>
-        {% for member in avgmembers: %}
-        <li>{{ member }}</li>
-		{% endfor %}
-	</ol>
-	{%endif%}
-	</div>
-	<div class="column rightmost" >
-  	<h3> Results with approach 2 </h3>
-	{%if(avgprediction)%}
-			predicted player score is {{avgprediction}}
-		{%endif%}
-	</div>
-  </div>
+<div class="tab">
+	{%if(open)%}
+  <button class="tablinks" onclick="openApproach(event, 'Approach1')" >Approach 1</button>
+  <button class="tablinks" onclick="openApproach(event, 'Approach2')" id="defaultOpen">Approach 2</button>	
+  	{%else%}
+  <button class="tablinks" onclick="openApproach(event, 'Approach1')" id="defaultOpen">Approach 1</button>
+  <button class="tablinks" onclick="openApproach(event, 'Approach2')" >Approach 2</button>
+  {%endif%}
 </div>
+
+<!-- Tab content -->
+<div id="Approach1" class="tabcontent">
+  <h3 style="text-align:center">Normal Method</h3>
+  <div class="grid-container">
+  <div class="grid-item">
+  	<form method="POST" action="/predictjson" nctype="multipart/form-data" >
+  	{%if(value)%}
+    <label>Number of Successful Dribbling  </label><br>
+	<input type="number" name="dribbling" required value={{value[0]}}><br>
+	<label>Number of Successful Pass  </label><br>
+	<input type="number" name="pass" required value={{value[1]}}><br>
+	<label>Player Attacking Score  </label><br>
+	<input type="number" name="attacking" required value={{value[2]}}><br>
+	<label>Player Defending Score  </label><br>
+	<input type="number" name="defending" required value={{value[3]}}><br>
+	<label>Team Play Score  </label><br>
+	<input type="number" name="teamplay" required value={{value[4]}}><br>
+	<input type="submit" value="Predict">
+	{%else%}
+	<label>Number of Successful Dribbling  </label><br>
+	<input type="number" name="dribbling" required ><br>
+	<label>Number of Successful Pass  </label><br>
+	<input type="number" name="pass" required ><br>
+	<label>Player Attacking Score  </label><br>
+	<input type="number" name="attacking" required ><br>
+	<label>Player Defending Score  </label><br>
+	<input type="number" name="defending" required ><br>
+	<label>Team Play Score  </label><br>
+	<input type="number" name="teamplay" required ><br>
+	<input type="submit" value="Predict">
+	</form>
+	{%endif%}
+  </div>
+
+  <div class="grid-item">
+  	<form method="POST" action="/predict" enctype="multipart/form-data">
+    <label> Select csv file only </label><br>
+	<input type="file" name="attachment" required><br>
+	<input type="submit" value="Submit File"><br>
+	</form>
+  </div>
+
+  <div class="grid-item">
+  	<h3 style="text-align:center">Results</h3>  
+  		{%if(prediction)%}
+	  		Predicted player score is {{prediction}}
+		{%endif%}
+
+	    {%if(members)%}
+
+		Top 5 players of next season are
+		<ol>
+	        {% for member in members: %}
+	        <li>{{ member }}</li>
+			{% endfor %}
+		</ol>
+		{%endif%}
+  </div>   
+</div>
+</div>
+
+<div id="Approach2" class="tabcontent">
+  <h3 style="text-align:center">Average Method</h3>
+     <div class="grid-container">
+ 		<div class="grid-item">
+		    <form method="POST" action="/predict1json" nctype="multipart/form-data" >
+		    {%if(value1)%}
+		    <label>Number of OnTargetShot  </label><br>
+			<input type="number" name="ontarget" required value={{value1[0]}}><br>
+		    <label>Number of SuccessfulDribbling  </label><br>
+			<input type="number" name="dribbling" required value={{value1[1]}}><br>
+			<label>Number of SuccessfulPass  </label><br>
+			<input type="number" name="pass" required value={{value1[2]}}><br>
+			<label>Player Attacking Score  </label><br>
+			<input type="number" name="attacking" required value={{value1[3]}}><br>
+			<label>Player Defending Score  </label><br>
+			<input type="number" name="defending" required value={{value1[4]}}><br>
+			<label>Team Play Score  </label><br>
+			<input type="number" name="teamplay" required value={{value1[5]}}><br>
+			<input type="submit" value="Predict">
+			{%else%}
+			<label>Number of OnTargetShot  </label><br>
+			<input type="number" name="ontarget" required ><br>
+		    <label>Number of SuccessfulDribbling  </label><br>
+			<input type="number" name="dribbling" required ><br>
+			<label>Number of SuccessfulPass  </label><br>
+			<input type="number" name="pass" required ><br>
+			<label>Player Attacking Score  </label><br>
+			<input type="number" name="attacking" required ><br>
+			<label>Player Defending Score  </label><br>
+			<input type="number" name="defending" required ><br>
+			<label>Team Play Score  </label><br>
+			<input type="number" name="teamplay" required ><br>
+			<input type="submit" value="Predict">
+			{%endif%}
+			</form>
+		</div>
+
+		<div class="grid-item">
+		    <form method="POST" action="/predict1" enctype="multipart/form-data">
+		    <label> Select csv file only </label><br>
+			<input type="file" name="attachment" required><br>
+			<input type="submit" value="Submit File"><br>
+			</form>
+		</div>
+		<div class="grid-item">
+			<h3 style="text-align:center">Results</h3>  
+	  		{%if(avgmembers)%}
+			Top 5 players of next season are
+			<ol>
+		        {% for member in avgmembers: %}
+		        <li>{{ member }}</li>
+				{% endfor %}
+			</ol>
+			{%endif%}
+
+			{%if(avgprediction)%}
+				Predicted player score is {{avgprediction}}
+			{%endif%}
+		</div>
+</div>
+
+<script>
+function openApproach(evt, approachName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(approachName).style.display = "block";
+  evt.currentTarget.className += " active";
+} 
+document.getElementById("defaultOpen").click();
+</script>
 </body>
 </html>
