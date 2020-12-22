@@ -169,15 +169,5 @@ if __name__ == '__main__':
         app.run(host=host, port=port)
     except:
         port = 1234 # If you don't provide any port the port will be set to 12345
-<<<<<<< HEAD
-    
+
     app.run(port=port, debug=True)
-=======
-        app.run(port=port, debug=True)
-
-    lr = joblib.load("model.pkl") # Load "model.pkl"
-    print ('Model loaded')
-    model_columns = joblib.load("model_columns.pkl") # Load "model_columns.pkl"
-    print ('Model columns loaded')
-
->>>>>>> 0da4ffd9076d7ccb8109d886ff96063278ccdb16
