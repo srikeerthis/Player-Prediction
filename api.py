@@ -17,6 +17,10 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    lr = joblib.load("model.pkl") # Load "model.pkl"
+    print ('Model loaded')
+    model_columns = joblib.load("model_columns.pkl") # Load "model_columns.pkl"
+    print ('Model columns loaded')
     if lr:
         try:
             # the key name is parameter
@@ -37,9 +41,39 @@ def predict():
             top_players.to_csv("normal.csv",index=False)
             playerId = list(top_players['PlayerId'].head())
             
-            return render_template('index.html',members=playerId)
+            return render_template('index.html',members=playerId, open=False)
         
         except:
+            return jsonify({'trace': traceback.format_exc()})
+    else:
+        print ('Train the model first')
+        return ('No model here to use')
+
+@app.route('/predictjson', methods=['POST'])
+def predictjson():
+    lr = joblib.load("model.pkl") # Load "model.pkl"
+    print ('Model loaded')
+    model_columns = joblib.load("model_columns.pkl") # Load "model_columns.pkl"
+    print ('Model columns loaded')
+    if lr:
+        try:
+            successfulDribbling = request.form.get('dribbling')
+            successfulPass = request.form.get('pass')
+            playerAttackingScore = request.form.get('attacking')
+            playerDefendingScore = request.form.get('defending')
+            playerTeamPlayScore = request.form.get('teamplay')
+
+            x = [[successfulDribbling,successfulPass,playerAttackingScore,playerDefendingScore,playerTeamPlayScore]]
+            y = [successfulDribbling,successfulPass,playerAttackingScore,playerDefendingScore,playerTeamPlayScore]
+            
+            query = pd.DataFrame(data=x,columns=model_columns)
+            query = query.reindex(columns=model_columns, fill_value=0)
+            prediction = lr.predict(query)
+
+            return render_template('index.html',prediction=str(prediction[0]),value=y, open=False)
+
+        except:
+
             return jsonify({'trace': traceback.format_exc()})
     else:
         print ('Train the model first')
@@ -106,22 +140,7 @@ def predict1json():
     print ('Model columns 1 loaded')
     if lr:
         try:
-            # Other Attributes of dataset
-
-            # backPostPass = request.form.get('backpass')
-            # blockedShot = request.form.get('blocked')
-            # goal = request.form.get('goal')
-            # goalAssist = request.form.get('goalassist')
-            # offTargetShot = request.form.get('offtarget')
             onTargetShot = request.form.get('ontarget')
-            # SavedShot = request.form.get('saved')
-            # SuccessfulInterception = request.form.get('interception')
-            # SuccessfulTackle = request.form.get('tackle')
-            # UnsuccessfulDribbling = request.form.get('udribbling')
-            # UnsuccessfulInterception = request.form.get('uinterception')
-            # UnsuccessfulPass = request.form.get('upass')
-            # UnsuccessfulTackle = request.form.get('utackle')
-            
             successfulDribbling = request.form.get('dribbling')
             successfulPass = request.form.get('pass')
             playerAttackingScore = request.form.get('attacking')
@@ -134,50 +153,7 @@ def predict1json():
             query = query.reindex(columns=model_columns, fill_value=0)
 
             prediction = lr.predict(query)
-            print(type(prediction))
             return render_template('index.html',avgprediction=str(prediction[0]), value1=y1, open= True)
-
-        except:
-
-            return jsonify({'trace': traceback.format_exc()})
-    else:
-        print ('Train the model first')
-        return ('No model here to use')
-
-@app.route('/predictjson', methods=['POST'])
-def predictjson():
-    if lr:
-        try:
-            # Other Attributes of dataset
-
-            # backPostPass = request.form.get('backpass')
-            # blockedShot = request.form.get('blocked')
-            # goal = request.form.get('goal')
-            # goalAssist = request.form.get('goalassist')
-            # offTargetShot = request.form.get('offtarget')
-            # onTargetShot = request.form.get('ontarget')
-            # SavedShot = request.form.get('saved')
-            # SuccessfulInterception = request.form.get('interception')
-            # SuccessfulTackle = request.form.get('tackle')
-            # UnsuccessfulDribbling = request.form.get('udribbling')
-            # UnsuccessfulInterception = request.form.get('uinterception')
-            # UnsuccessfulPass = request.form.get('upass')
-            # UnsuccessfulTackle = request.form.get('utackle')
-            
-            successfulDribbling = request.form.get('dribbling')
-            successfulPass = request.form.get('pass')
-            playerAttackingScore = request.form.get('attacking')
-            playerDefendingScore = request.form.get('defending')
-            playerTeamPlayScore = request.form.get('teamplay')
-
-            x = [[successfulDribbling,successfulPass,playerAttackingScore,playerDefendingScore,playerTeamPlayScore]]
-            y = [successfulDribbling,successfulPass,playerAttackingScore,playerDefendingScore,playerTeamPlayScore]
-            
-            query = pd.DataFrame(data=x,columns=model_columns)
-            query = query.reindex(columns=model_columns, fill_value=0)
-            prediction = lr.predict(query)
-            print(type(prediction))
-            return render_template('index.html',prediction=str(prediction[0]),value=y)
 
         except:
 
@@ -191,9 +167,5 @@ if __name__ == '__main__':
         port = int(sys.argv[1]) # This is for a command-line input
     except:
         port = 1234 # If you don't provide any port the port will be set to 12345
-    lr = joblib.load("model.pkl") # Load "model.pkl"
-    print ('Model loaded')
-    model_columns = joblib.load("model_columns.pkl") # Load "model_columns.pkl"
-    print ('Model columns loaded')
-
+    
     app.run(port=port, debug=True)
